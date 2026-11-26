@@ -161,17 +161,17 @@ body[data-lang="kn"] .reveal-btn { text-transform: none; letter-spacing: 0; font
 .js .parade.rv.in img { animation: march 3s cubic-bezier(.2, .7, .2, 1) both; }
 @keyframes march { from { transform: translateX(-70%); opacity: 0; } 40% { opacity: 1; } to { transform: none; opacity: 1; } }
 @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-.tl { display: grid; gap: 1.2rem; margin-top: 1.8rem; text-align: left; }
-.event { background: var(--cream); border: 1px solid var(--line); border-radius: 6px; display: grid; grid-template-columns: 92px minmax(0, 1fr); overflow: hidden; }
-.event .dt { background: var(--brown); color: var(--gold-soft); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem .3rem; text-align: center; }
-.event .dt b { font-size: 2.7rem; line-height: 1; font-weight: 500; color: var(--gold); }
-.event .dt span { font: 800 12px/1.5 var(--ui); letter-spacing: .14em; }
-.event .tx { padding: 1.1rem 1.2rem; }
-.event h3 { font-size: 1.8rem; color: var(--brown); line-height: 1.2; }
-.event .day { font: 700 13px/1.5 var(--ui); letter-spacing: .04em; margin-top: .3rem; }
+.tl { display: grid; gap: 1.2rem; margin-top: 1.8rem; text-align: left; grid-template-columns: 1fr 1fr; }
+.event { background: var(--cream); border: 1px solid var(--line); border-radius: 6px; display: grid; grid-template-columns: 1fr; overflow: hidden; }
+.event .dt { background: var(--brown); color: var(--gold-soft); display: flex; align-items: center; justify-content: center; padding: .7rem .3rem; text-align: center; gap: .4rem; }
+.event .dt b { font-size: 2.2rem; line-height: 1; font-weight: 500; color: var(--gold); }
+.event .dt span { font: 800 11px/1.5 var(--ui); letter-spacing: .14em; }
+.event .tx { padding: .9rem 1rem; }
+.event h3 { font-size: clamp(1.2rem, 3.5vw, 1.8rem); color: var(--brown); line-height: 1.2; }
+.event .day { font: 700 11px/1.5 var(--ui); letter-spacing: .04em; margin-top: .3rem; }
 body[data-lang="kn"] .event .day { font-family: var(--kn); letter-spacing: 0; }
-.event .time { font-size: 1.3rem; color: var(--kumkum); font-weight: 600; }
-.event .note { font-size: .92em; color: var(--ink-soft); }
+.event .time { font-size: clamp(1rem, 2.8vw, 1.3rem); color: var(--kumkum); font-weight: 600; }
+.event .note { font-size: .82em; color: var(--ink-soft); }
 .venue { margin-top: 2rem; background: var(--brown); color: var(--gold-soft); border-radius: 6px; padding: 1.8rem 1.3rem; text-align: center; }
 .venue h3 { font-size: 2.1rem; color: var(--gold); line-height: 1.2; }
 body[data-lang="kn"] .venue h3 { font-weight: 700; font-size: 1.7rem; }
@@ -267,9 +267,6 @@ body.has-music .seal .musicnote { display: block; }
 
 @media (min-width: 700px) {
   .couple { grid-template-columns: 1fr 1fr; }
-  .tl { grid-template-columns: 1fr 1fr; }
-  .event { grid-template-columns: 1fr; }
-  .event .dt { flex-direction: row; gap: .6rem; padding: .8rem; }
   .leaf { height: 420px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -411,23 +408,23 @@ body.has-music .seal .musicnote { display: block; }
     <p class="kicker rv en">Wedding timeline</p>
     <h2 class="h rv en">Join us for our wedding Muhurtham &amp; reception</h2>
     <h2 class="h rv kn">ವಿವಾಹ ಮುಹೂರ್ತ ಮತ್ತು ಆರತಕ್ಷತೆ</h2>
-    <div class="tl">
+    <div class="tl" style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem">
       <article class="event rv rv-l">
-        <div class="dt"><b>04</b><span>DEC<br>2026</span></div>
-        <div class="tx">
-          <h3 class="en">Reception</h3><h3 class="kn">ಆರತಕ್ಷತೆ</h3>
-          <p class="day en">Friday, 04.12.2026</p><p class="day kn">ಶುಕ್ರವಾರ, 04.12.2026</p>
-          <p class="time en">10:00 AM onwards</p><p class="time kn">ಬೆಳಿಗ್ಗೆ 10.00 ರಿಂದ</p>
-          <p class="note en">Venue: Govt. Employees Hall, DC Compound, Shivamogga</p><p class="note kn">ಸ್ಥಳ: ಸರ್ಕಾರಿ ನೌಕರರ ಭವನ, ಡಿ.ಸಿ. ಕಾಂಪೌಂಡ್, ಶಿವಮೊಗ್ಗ</p>
-        </div>
-      </article>
-      <article class="event rv rv-r" style="--d:.15s">
         <div class="dt"><b>03</b><span>DEC<br>2026</span></div>
         <div class="tx">
           <h3 class="en">Wedding Muhurtham</h3><h3 class="kn">ವಿವಾಹ ಮುಹೂರ್ತ</h3>
           <p class="day en">Thursday, 03.12.2026</p><p class="day kn">ಗುರುವಾರ, 03.12.2026</p>
           <p class="time en">12:00 PM to 12:30 PM</p><p class="time kn">ಮಧ್ಯಾಹ್ನ 12.00 ರಿಂದ 12.30</p>
           <p class="note en">Lagna: Abhijin</p><p class="note kn">ಲಗ್ನ: ಅಭಿಜಿನ್</p>
+        </div>
+      </article>
+      <article class="event rv rv-r" style="--d:.15s">
+        <div class="dt"><b>04</b><span>DEC<br>2026</span></div>
+        <div class="tx">
+          <h3 class="en">Reception</h3><h3 class="kn">ಆರತಕ್ಷತೆ</h3>
+          <p class="day en">Friday, 04.12.2026</p><p class="day kn">ಶುಕ್ರವಾರ, 04.12.2026</p>
+          <p class="time en">10:00 AM onwards</p><p class="time kn">ಬೆಳಿಗ್ಗೆ 10.00 ರಿಂದ</p>
+          <p class="note en">Venue: Govt. Employees Hall, DC Compound, Shivamogga</p><p class="note kn">ಸ್ಥಳ: ಸರ್ಕಾರಿ ನೌಕರರ ಭವನ, ಡಿ.ಸಿ. ಕಾಂಪೌಂಡ್, ಶಿವಮೊಗ್ಗ</p>
         </div>
       </article>
     </div>
