@@ -184,14 +184,35 @@ body[data-lang="kn"] .btn { text-transform: none; letter-spacing: 0; font-family
 
 /* COUNTDOWN */
 .count { background: var(--brown-deep); color: var(--gold-soft); text-align: center; }
-.clock { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; margin: 1.5rem auto 0; max-width: 560px; }
-.unit { border: 1px solid rgba(216,169,75,.55); border-radius: 6px; padding: .9rem .2rem .7rem; overflow: hidden; }
-.unit b { display: block; font-size: clamp(2.1rem, 9.5vw, 3.4rem); line-height: 1; font-weight: 500; color: #fff4dc; font-variant-numeric: tabular-nums; }
-.unit b.tick { animation: pop .35s ease-out; }
-@keyframes pop { from { transform: translateY(-10px); opacity: .2; } to { transform: none; opacity: 1; } }
-.unit span { font: 800 11px/1.6 var(--ui); letter-spacing: .14em; color: var(--gold); text-transform: uppercase; }
-body[data-lang="kn"] .unit span { text-transform: none; letter-spacing: 0; font-family: var(--kn); font-size: 13px; }
-.count .msg { margin-top: 1.3rem; font-style: italic; color: var(--gold-soft); }
+.clock { display: flex; align-items: center; justify-content: center; gap: 0; margin: 1.8rem auto 0; max-width: 600px; flex-wrap: nowrap; }
+.unit { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; padding: .5rem .2rem; }
+.unit-inner { position: relative; width: clamp(56px, 16vw, 86px); height: clamp(60px, 17vw, 90px); perspective: 400px; }
+/* static card face */
+.unit-face { position: absolute; inset: 0; background: linear-gradient(160deg, rgba(255,244,220,.12) 0%, rgba(255,244,220,.04) 100%); border: 1px solid rgba(216,169,75,.45); border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.unit-face::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(216,169,75,.25); }
+/* flip digit */
+.unit b { font-size: clamp(2rem, 9vw, 3.2rem); line-height: 1; font-weight: 500; color: #fff4dc; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+/* flip keyframe — card flips down when number changes */
+@keyframes flipDown {
+  0%   { transform: rotateX(0deg);   opacity: 1; }
+  45%  { transform: rotateX(-90deg); opacity: .3; }
+  55%  { transform: rotateX(90deg);  opacity: .3; }
+  100% { transform: rotateX(0deg);   opacity: 1; }
+}
+.unit-face.flip { animation: flipDown .5s cubic-bezier(.4,0,.2,1); transform-origin: 50% 50%; }
+/* glow pulse on the whole unit when second ticks */
+@keyframes unitGlow {
+  0%   { box-shadow: 0 0 0 0 rgba(216,169,75,0); }
+  30%  { box-shadow: 0 0 14px 2px rgba(216,169,75,.35); }
+  100% { box-shadow: 0 0 0 0 rgba(216,169,75,0); }
+}
+.unit-face.flip { animation: flipDown .5s cubic-bezier(.4,0,.2,1), unitGlow .5s ease-out; }
+.unit span { font: 800 10px/1.6 var(--ui); letter-spacing: .16em; color: var(--gold); text-transform: uppercase; margin-top: .45rem; }
+body[data-lang="kn"] .unit span { text-transform: none; letter-spacing: 0; font-family: var(--kn); font-size: 12px; }
+/* colon separators */
+.cd-sep { color: var(--gold); font-size: clamp(1.6rem, 6vw, 2.4rem); font-weight: 500; padding: 0 2px; margin-bottom: 1.4rem; align-self: center; opacity: .7; animation: blink 1s step-start infinite; }
+@keyframes blink { 0%, 100% { opacity: .7; } 50% { opacity: .15; } }
+.count .msg { margin-top: 1.4rem; font-style: italic; color: var(--gold-soft); }
 
 /* FEET BAND */
 .steps { padding-top: 0; background: var(--cream); }
@@ -201,13 +222,21 @@ body[data-lang="kn"] .unit span { text-transform: none; letter-spacing: 0; font-
 body[data-lang="kn"] .steps .q { font-style: normal; font-weight: 700; font-size: clamp(1.4rem, 5vw, 1.8rem); }
 
 /* GALLERY */
-.gal-track { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-top: 1.5rem; }
-.gal-track::-webkit-scrollbar { display: none; }
-.slide { flex: 0 0 100%; min-width: 0; scroll-snap-align: center; margin: 0; text-align: center; }
-.slide img { width: auto; max-width: 100%; max-height: 72vh; margin: 0 auto; border: 2px solid var(--gold); border-radius: 4px; background: #fff; }
-.slide figcaption { margin-top: .8rem; font-style: italic; color: var(--ink-soft); }
-.gal-ctl { display: flex; align-items: center; justify-content: center; gap: 1.2rem; margin-top: 1rem; font: 800 13px/1 var(--ui); letter-spacing: .14em; color: var(--brown); }
-.gal-ctl button { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--brown); background: none; color: var(--brown); font-size: 22px; line-height: 1; cursor: pointer; }
+.gal-wrap { overflow: hidden; border-radius: 8px; margin-top: 1.5rem; position: relative; }
+.gal-track { display: flex; transition: transform .55s cubic-bezier(.4,0,.2,1); will-change: transform; touch-action: pan-y; }
+.slide { flex: 0 0 100%; min-width: 0; margin: 0; text-align: center; padding: 0 2px; }
+.slide img { width: auto; max-width: 100%; max-height: 72vh; margin: 0 auto; border: 2px solid var(--gold); border-radius: 6px; background: #fff;
+  box-shadow: 0 8px 40px rgba(0,0,0,.18);
+  transition: transform .55s cubic-bezier(.4,0,.2,1), opacity .55s ease; }
+.slide.leaving { opacity: .4; transform: scale(.93); }
+.slide.entering { opacity: 1; transform: scale(1); }
+/* dot indicators */
+.gal-dots { display: flex; justify-content: center; gap: 8px; margin-top: .9rem; }
+.gal-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); opacity: .28; transition: opacity .3s, transform .3s; border: none; padding: 0; cursor: pointer; }
+.gal-dot.active { opacity: 1; transform: scale(1.4); }
+.gal-ctl { display: flex; align-items: center; justify-content: center; gap: 1.2rem; margin-top: .8rem; font: 800 13px/1 var(--ui); letter-spacing: .14em; color: var(--brown); }
+.gal-ctl button { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--brown); background: none; color: var(--brown); font-size: 22px; line-height: 1; cursor: pointer; transition: background .2s, color .2s; }
+.gal-ctl button:hover { background: var(--brown); color: var(--gold); }
 
 /* GUEST NOTE */
 .note-sec { background: var(--brown); color: var(--gold-soft); text-align: center; }
@@ -454,10 +483,25 @@ body.has-music .seal .musicnote { display: block; }
     <p class="kicker rv en">The big day is getting closer</p>
     <h2 class="h rv en">Counting down to forever</h2><h2 class="h rv kn">ಮುಹೂರ್ತಕ್ಕೆ ಇನ್ನು</h2>
     <div class="clock rv" role="timer" aria-live="off">
-      <div class="unit"><b id="cd-d">00</b><span><i class="en" style="font-style:normal">Days</i><i class="kn" style="font-style:normal">ದಿನ</i></span></div>
-      <div class="unit"><b id="cd-h">00</b><span><i class="en" style="font-style:normal">Hours</i><i class="kn" style="font-style:normal">ಗಂಟೆ</i></span></div>
-      <div class="unit"><b id="cd-m">00</b><span><i class="en" style="font-style:normal">Minutes</i><i class="kn" style="font-style:normal">ನಿಮಿಷ</i></span></div>
-      <div class="unit"><b id="cd-s">00</b><span><i class="en" style="font-style:normal">Seconds</i><i class="kn" style="font-style:normal">ಸೆಕೆಂಡ್</i></span></div>
+      <div class="unit">
+        <div class="unit-inner"><div class="unit-face" id="face-d"><b id="cd-d">00</b></div></div>
+        <span><i class="en" style="font-style:normal">Days</i><i class="kn" style="font-style:normal">ದಿನ</i></span>
+      </div>
+      <div class="cd-sep">:</div>
+      <div class="unit">
+        <div class="unit-inner"><div class="unit-face" id="face-h"><b id="cd-h">00</b></div></div>
+        <span><i class="en" style="font-style:normal">Hours</i><i class="kn" style="font-style:normal">ಗಂಟೆ</i></span>
+      </div>
+      <div class="cd-sep">:</div>
+      <div class="unit">
+        <div class="unit-inner"><div class="unit-face" id="face-m"><b id="cd-m">00</b></div></div>
+        <span><i class="en" style="font-style:normal">Minutes</i><i class="kn" style="font-style:normal">ನಿಮಿಷ</i></span>
+      </div>
+      <div class="cd-sep">:</div>
+      <div class="unit">
+        <div class="unit-inner"><div class="unit-face" id="face-s"><b id="cd-s">00</b></div></div>
+        <span><i class="en" style="font-style:normal">Seconds</i><i class="kn" style="font-style:normal">ಸೆಕೆಂಡ್</i></span>
+      </div>
     </div>
     <p class="msg rv en" id="cd-msg-en">Every second brings us closer to celebrating with you.</p>
     <p class="msg rv kn" id="cd-msg-kn">ಪ್ರತಿ ಕ್ಷಣವೂ ನಿಮ್ಮೊಂದಿಗೆ ಸಂಭ್ರಮಿಸುವ ದಿನಕ್ಕೆ ನಮ್ಮನ್ನು ಹತ್ತಿರ ತರುತ್ತಿದೆ.</p>
@@ -476,14 +520,16 @@ body.has-music .seal .musicnote { display: block; }
   <div class="wrap center">
     <p class="kicker rv en">Our invitation card</p><p class="kicker rv kn">ನಮ್ಮ ಆಮಂತ್ರಣ ಪತ್ರಿಕೆ</p>
     <h2 class="h rv en">The printed card</h2><h2 class="h rv kn">ಮುದ್ರಿತ ಆಮಂತ್ರಣ</h2>
-    <p class="soft en">Swipe left or right to see every page</p><p class="soft kn">ಎಲ್ಲಾ ಪುಟಗಳನ್ನು ನೋಡಲು ಎಡ ಅಥವಾ ಬಲಕ್ಕೆ ಸರಿಸಿ</p>
-    <div class="gal-track" id="track" tabindex="0" aria-label="Invitation card pages">
-      <figure class="slide"><img src="img/s1.jpg" alt="Front cover of the Shubhavivaha invitation card" loading="lazy"><figcaption class="en">Front cover</figcaption><figcaption class="kn">ಮುಖಪುಟ</figcaption></figure>
-      <figure class="slide"><img src="img/s2.jpg" alt="Inside page of the card, English" loading="lazy"><figcaption class="en">The invitation, English</figcaption><figcaption class="kn">ಆಮಂತ್ರಣ, ಇಂಗ್ಲಿಷ್</figcaption></figure>
-      <figure class="slide"><img src="img/s3.jpg" alt="Inside page of the card, Kannada" loading="lazy"><figcaption class="en">The invitation, Kannada</figcaption><figcaption class="kn">ಆಮಂತ್ರಣ, ಕನ್ನಡ</figcaption></figure>
-      <figure class="slide"><img src="img/s4.jpg" alt="Well-wishers page of the card with a location QR code" loading="lazy"><figcaption class="en">Well-wishers and location</figcaption><figcaption class="kn">ಬಯಸುವವರು ಮತ್ತು ಸ್ಥಳ</figcaption></figure>
-      <figure class="slide"><img src="img/s5.jpg" alt="Back cover with the N and S monogram" loading="lazy"><figcaption class="en">Back cover</figcaption><figcaption class="kn">ಹಿಂಬದಿ ಪುಟ</figcaption></figure>
+    <div class="gal-wrap">
+      <div class="gal-track" id="track" tabindex="0" aria-label="Invitation card pages">
+        <figure class="slide"><img src="img/s1.jpg" alt="Front cover" loading="lazy"></figure>
+        <figure class="slide"><img src="img/s2.jpg" alt="Invitation card page 2" loading="lazy"></figure>
+        <figure class="slide"><img src="img/s3.jpg" alt="Invitation card page 3" loading="lazy"></figure>
+        <figure class="slide"><img src="img/s4.jpg" alt="Invitation card page 4" loading="lazy"></figure>
+        <figure class="slide"><img src="img/s5.jpg" alt="Back cover" loading="lazy"></figure>
+      </div>
     </div>
+    <div class="gal-dots" id="dots"></div>
     <div class="gal-ctl">
       <button type="button" id="prev" aria-label="Previous page">‹</button>
       <span id="counter">01 / 05</span>
@@ -657,7 +703,10 @@ body.has-music .seal .musicnote { display: block; }
     var el = $(id);
     if (el.textContent !== v) {
       el.textContent = v;
-      if (!reduce && id !== "cd-d") { el.classList.remove("tick"); void el.offsetWidth; el.classList.add("tick"); }
+      if (!reduce) {
+        var face = $("face-" + id.replace("cd-", ""));
+        if (face) { face.classList.remove("flip"); void face.offsetWidth; face.classList.add("flip"); }
+      }
     }
   }
   function tick() {
@@ -751,16 +800,83 @@ body.has-music .seal .musicnote { display: block; }
   }
   window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
 
-  /* gallery */
-  var track = $("track"), count = track.children.length;
-  function idx() { return Math.max(0, Math.min(count - 1, Math.round(track.scrollLeft / (track.clientWidth + 14)))); }
-  function upd() { $("counter").textContent = pad(idx() + 1) + " / " + pad(count); }
-  function go(d) { track.scrollTo({ left: (idx() + d) * (track.clientWidth + 14), behavior: "smooth" }); }
-  track.addEventListener("scroll", upd, { passive: true });
-  $("prev").addEventListener("click", function () { go(-1); });
-  $("next").addEventListener("click", function () { go(1); });
-  track.addEventListener("keydown", function (e) { if (e.key === "ArrowRight") go(1); if (e.key === "ArrowLeft") go(-1); });
-  upd();
+  /* gallery — custom slide engine with touch, transform & dots */
+  (function() {
+    var track = $("track"), slides = track.querySelectorAll(".slide");
+    var dotsEl = $("dots");
+    var count = slides.length, cur = 0;
+    var startX = 0, startY = 0, isDragging = false, dragDx = 0, locked = false;
+
+    /* build dots */
+    var dots = [];
+    for (var i = 0; i < count; i++) {
+      (function(i) {
+        var d = document.createElement("button");
+        d.className = "gal-dot" + (i === 0 ? " active" : "");
+        d.setAttribute("aria-label", "Go to card " + (i + 1));
+        d.addEventListener("click", function() { goTo(i); });
+        dotsEl.appendChild(d); dots.push(d);
+      })(i);
+    }
+
+    function getX() { return -cur * 100; }
+    function applyX(x, instant) {
+      track.style.transition = instant ? "none" : "transform .55s cubic-bezier(.4,0,.2,1)";
+      track.style.transform = "translateX(" + x + "%)";
+    }
+    function goTo(n, fromDrag) {
+      if (locked && !fromDrag) return;
+      n = Math.max(0, Math.min(count - 1, n));
+      cur = n;
+      applyX(getX(), false);
+      dots.forEach(function(d, i) { d.classList.toggle("active", i === n); });
+      $("counter").textContent = pad(n + 1) + " / " + pad(count);
+    }
+
+    /* counter init */
+    $("counter").textContent = "01 / " + pad(count);
+
+    /* buttons */
+    $("prev").addEventListener("click", function() { goTo(cur - 1); });
+    $("next").addEventListener("click", function() { goTo(cur + 1); });
+
+    /* keyboard */
+    track.addEventListener("keydown", function(e) {
+      if (e.key === "ArrowRight") goTo(cur + 1);
+      if (e.key === "ArrowLeft")  goTo(cur - 1);
+    });
+
+    /* touch / pointer swipe */
+    track.addEventListener("pointerdown", function(e) {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      startX = e.clientX; startY = e.clientY; isDragging = false; dragDx = 0;
+      track.setPointerCapture && track.setPointerCapture(e.pointerId);
+    });
+    track.addEventListener("pointermove", function(e) {
+      if (!e.buttons) return;
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if (!isDragging && Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 6) isDragging = true;
+      if (!isDragging) return;
+      dragDx = dx;
+      var pct = (dx / track.offsetWidth) * 100;
+      applyX(getX() + pct, true);
+    });
+    track.addEventListener("pointerup", function(e) {
+      if (!isDragging) return;
+      isDragging = false;
+      var threshold = track.offsetWidth * 0.22;
+      if (dragDx < -threshold) goTo(cur + 1, true);
+      else if (dragDx > threshold) goTo(cur - 1, true);
+      else applyX(getX(), false);
+      dragDx = 0;
+    });
+    track.addEventListener("pointercancel", function() {
+      isDragging = false; applyX(getX(), false); dragDx = 0;
+    });
+
+    /* initial position */
+    applyX(0, true);
+  })();
 })();
 </script>
 
