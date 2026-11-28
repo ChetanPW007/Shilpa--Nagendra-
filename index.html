@@ -1738,6 +1738,122 @@
         transition-duration: .01s !important;
       }
     }
+
+    /* ═══════════════════════════════════════
+       DUO — the little bride & groom who walk along the bottom of the screen
+    ═══════════════════════════════════════ */
+    .duo {
+      position: fixed;
+      z-index: 40;
+      left: 0;
+      bottom: env(safe-area-inset-bottom, 0px);
+      --h: 112px;
+      transform: translate3d(var(--x, 14px), 0, 0);
+      transition: transform .55s cubic-bezier(.2, .7, .2, 1);
+      pointer-events: none;
+    }
+    .duo-in {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      opacity: 0;
+      transform: translateY(70px) scale(.9);
+      transition: opacity .8s ease .9s, transform 1.1s cubic-bezier(.2, .9, .3, 1.15) .9s;
+    }
+    body.entered .duo-in { opacity: 1; transform: none; }
+    .ch { height: var(--h); aspect-ratio: 124 / 190; width: auto; display: block; overflow: visible; }
+    .ch + .ch { margin-left: calc(var(--h) * -.3); }
+    .ch .all, .ch .head, .ch .armL, .ch .armR { transform-box: fill-box; }
+    .ch .all  { transform-origin: 50% 100%; animation: duoBob 2.6s ease-in-out infinite; }
+    .bride .all { animation-delay: -.9s; }
+    .ch .head { transform-origin: 50% 100%; transition: transform .7s cubic-bezier(.3, .8, .3, 1); }
+    .ch .armL, .ch .armR { transform-origin: 50% 0%; transition: transform .7s cubic-bezier(.3, .8, .3, 1); }
+    .ch .legL, .ch .legR { transform-box: fill-box; transform-origin: 50% 0%; }
+    .ch .eye { transform-box: fill-box; transform-origin: 50% 50%; animation: duoBlink 4.6s infinite; }
+    .bride .eye { animation-delay: -1.9s; }
+    .ch .cheek { opacity: .4; transition: opacity .5s; }
+    .ch .flower { opacity: 0; transition: opacity .4s; }
+
+    /* holding hands: the two inner arms lean toward each other */
+    .groom .armR { transform: rotate(-18deg); }
+    .bride .armL { transform: rotate(18deg); }
+
+    @keyframes duoBob   { 0%, 100% { transform: translateY(0) scaleY(1); } 50% { transform: translateY(-2.5px) scaleY(1.012); } }
+    @keyframes duoBlink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.08); } }
+
+    /* ── actions, picked in turn while the page is still ── */
+    .duo[data-act="touch"] .groom .head { transform: translate(6px, 2px) rotate(10deg); }
+    .duo[data-act="touch"] .bride .head { transform: translate(-6px, 2px) rotate(-10deg); }
+    .duo[data-act="touch"] .cheek { opacity: .95; }
+
+    .duo[data-act="wave"] .groom .armL { animation: duoWaveL .7s ease-in-out infinite; }
+    .duo[data-act="wave"] .bride .armR { animation: duoWaveR .7s ease-in-out .15s infinite; }
+    .duo[data-act="wave"] .head { transform: rotate(3deg); }
+    @keyframes duoWaveL { 0%, 100% { transform: rotate(135deg); } 50% { transform: rotate(168deg); } }
+    @keyframes duoWaveR { 0%, 100% { transform: rotate(-135deg); } 50% { transform: rotate(-168deg); } }
+
+    .duo[data-act="rose"] .groom .armL { transform: rotate(72deg); }
+    .duo[data-act="rose"] .groom .flower { opacity: 1; }
+    .duo[data-act="rose"] .groom .head { transform: rotate(-6deg); }
+    .duo[data-act="rose"] .bride .armR { animation: duoWaveR .8s ease-in-out infinite; }
+    .duo[data-act="rose"] .cheek { opacity: .95; }
+
+    .duo[data-act="namaste"] .groom .armL { transform: rotate(-36deg); }
+    .duo[data-act="namaste"] .groom .armR { transform: rotate(36deg); }
+    .duo[data-act="namaste"] .bride .armL { transform: rotate(-36deg); }
+    .duo[data-act="namaste"] .bride .armR { transform: rotate(36deg); }
+    .duo[data-act="namaste"] .head { transform: translateY(5px) rotate(0deg); }
+
+    .duo[data-act="dance"] .all { animation: duoDance .62s ease-in-out infinite; }
+    .duo[data-act="dance"] .bride .all { animation-delay: -.31s; }
+    .duo[data-act="dance"] .groom .armL { transform: rotate(128deg); }
+    .duo[data-act="dance"] .bride .armR { transform: rotate(-128deg); }
+    @keyframes duoDance { 0%, 100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(4deg) translateY(-5px); } }
+
+    /* ── walking while the page scrolls ── */
+    .duo.walking .all { animation: duoHop .46s ease-in-out infinite; }
+    .duo.walking .groom .legL { animation: duoStepA .46s ease-in-out infinite; }
+    .duo.walking .groom .legR { animation: duoStepB .46s ease-in-out infinite; }
+    .duo.walking .bride .legL { animation: duoFootA .46s ease-in-out infinite; }
+    .duo.walking .bride .legR { animation: duoFootB .46s ease-in-out infinite; }
+    .duo.walking .skirt { animation: duoSkirt .46s ease-in-out infinite; }
+    .duo.walking .groom .armL { animation: duoSwingA .46s ease-in-out infinite; }
+    .duo.walking .bride .armR { animation: duoSwingB .46s ease-in-out infinite; }
+    .skirt { transform-box: fill-box; transform-origin: 50% 0%; }
+    @keyframes duoHop   { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    @keyframes duoStepA { 0%, 100% { transform: rotate(18deg); } 50% { transform: rotate(-18deg); } }
+    @keyframes duoStepB { 0%, 100% { transform: rotate(-18deg); } 50% { transform: rotate(18deg); } }
+    @keyframes duoFootA { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    @keyframes duoFootB { 0%, 100% { transform: translateY(-5px); } 50% { transform: translateY(0); } }
+    @keyframes duoSkirt { 0%, 100% { transform: skewX(3deg); } 50% { transform: skewX(-3deg); } }
+    @keyframes duoSwingA { 0%, 100% { transform: rotate(-22deg); } 50% { transform: rotate(22deg); } }
+    @keyframes duoSwingB { 0%, 100% { transform: rotate(22deg); } 50% { transform: rotate(-22deg); } }
+
+    /* floating hearts */
+    .hearts { position: absolute; left: 0; right: 0; top: 0; height: 0; pointer-events: none; }
+    .ht {
+      position: absolute;
+      top: 8%;
+      left: var(--lx, 50%);
+      font: 400 var(--fs, 16px)/1 serif;
+      color: #e0707a;
+      text-shadow: 0 0 8px rgba(224, 112, 122, .6);
+      opacity: 0;
+      animation: htUp 2.3s ease-out forwards;
+    }
+    @keyframes htUp {
+      0%   { opacity: 0; transform: translate(0, 0) scale(.5); }
+      15%  { opacity: 1; }
+      100% { opacity: 0; transform: translate(var(--dx, 0px), -64px) scale(1.15); }
+    }
+
+    /* leave room under the footer so the pair never covers the last line */
+    footer { padding-bottom: calc(3rem + 124px); }
+    @media (min-width: 700px) { .duo { --h: 150px; } footer { padding-bottom: calc(3rem + 160px); } }
+    @media (prefers-reduced-motion: reduce) {
+      .ch .all, .ch .eye { animation: none !important; }
+      .duo, .duo-in { transition-duration: .01s !important; transition-delay: 0s !important; }
+    }
   </style>
 
   <canvas id="fx" aria-hidden="true"></canvas>
@@ -2100,6 +2216,79 @@
   </footer>
   </div>
 
+    <!-- little bride & groom -->
+  <div class="duo" id="duo" aria-hidden="true">
+    <div class="duo-in">
+    <svg class="ch groom" viewBox="-62 30 124 190" aria-hidden="true">
+      <ellipse cx="0" cy="210" rx="34" ry="5" fill="rgba(0,0,0,.3)" />
+      <g class="all">
+        <g class="legL"><path d="M-19 146 L-1 146 L-3 204 L-22 204Z" fill="#fff8ea" stroke="#d9c496" stroke-width="1" /><ellipse cx="-12.5" cy="207" rx="10.5" ry="4.6" fill="#3a2418" /></g>
+        <g class="legR"><path d="M1 146 L19 146 L22 204 L3 204Z" fill="#fff8ea" stroke="#d9c496" stroke-width="1" /><ellipse cx="12.5" cy="207" rx="10.5" ry="4.6" fill="#3a2418" /></g>
+        <path d="M-22 140 L22 140 L23 156 L-23 156Z" fill="#fffaf0" stroke="#d9c496" stroke-width="1" />
+        <path d="M-23 100 Q-26 128 -22 156 L22 156 Q26 128 23 100 Q0 92 -23 100Z" fill="#f7e8c4" stroke="#e0c98e" stroke-width="1" />
+        <rect x="-22" y="151" width="44" height="5" fill="#d8a94b" />
+        <path d="M0 97 L0 151" stroke="#d8a94b" stroke-width="1.6" />
+        <circle cx="0" cy="110" r="1.7" fill="#d8a94b" /><circle cx="0" cy="123" r="1.7" fill="#d8a94b" /><circle cx="0" cy="136" r="1.7" fill="#d8a94b" />
+        <path d="M-23 100 L-9 97 L24 148 L10 154Z" fill="#8c1f2b" />
+        <path d="M-9 97 L24 148" stroke="#e8c558" stroke-width="2" />
+        <path d="M10 154 L24 148 L29 178 L14 182Z" fill="#8c1f2b" /><path d="M14 182 L29 178" stroke="#e8c558" stroke-width="2" />
+        <g class="armL"><path d="M-24 103 Q-31 126 -27 146 L-18 146 Q-17 124 -17 106Z" fill="#f7e8c4" stroke="#e0c98e" stroke-width="1" /><rect x="-27.5" y="141" width="10" height="3" fill="#d8a94b" /><circle cx="-22.5" cy="150" r="5.6" fill="#b87a52" />
+          <g class="flower"><path d="M-22.5 153 L-22.5 166" stroke="#2e7d4f" stroke-width="2" stroke-linecap="round" /><circle cx="-22.5" cy="170" r="6" fill="#d1303f" /><circle cx="-22.5" cy="170" r="3.2" fill="#8f1020" /><circle cx="-26" cy="167" r="2.6" fill="#e8505c" /><circle cx="-19" cy="167" r="2.6" fill="#e8505c" /></g></g>
+        <g class="armR"><path d="M24 103 Q31 126 27 146 L18 146 Q17 124 17 106Z" fill="#f7e8c4" stroke="#e0c98e" stroke-width="1" /><rect x="17.5" y="141" width="10" height="3" fill="#d8a94b" /><circle cx="22.5" cy="150" r="5.6" fill="#b87a52" /></g>
+        <g class="head">
+          <rect x="-5.5" y="90" width="11" height="13" fill="#b87a52" />
+          <circle cx="-25" cy="70" r="4.6" fill="#b87a52" /><circle cx="25" cy="70" r="4.6" fill="#b87a52" />
+          <circle cx="0" cy="68" r="25" fill="#b87a52" />
+          <g fill="#1b1110"><circle cx="-16" cy="48" r="11" /><circle cx="-5" cy="42" r="11.5" /><circle cx="8" cy="42" r="11.5" /><circle cx="19" cy="49" r="10.5" /><circle cx="-25" cy="58" r="8" /><circle cx="25" cy="58" r="8" />
+            <path d="M-25 63 Q-25 46 0 45 Q25 46 25 63 Q14 53 0 53 Q-14 53 -25 63Z" />
+            <path d="M-24 70 Q-25 96 0 95 Q25 96 24 70 Q20 84 10 84 Q0 88 -10 84 Q-20 84 -24 70Z" />
+            <path d="M-11 79 Q-5 73.5 0 77.5 Q5 73.5 11 79 Q5 80.5 0 79.5 Q-5 80.5 -11 79Z" /></g>
+          <path d="M-6.5 81.5 Q0 89 6.5 81.5Z" fill="#7a2e2e" /><path d="M-4.8 82 Q0 85 4.8 82Z" fill="#fff" />
+          <ellipse class="eye" cx="-9.5" cy="66" rx="2.7" ry="3.5" fill="#1b1110" /><ellipse class="eye" cx="9.5" cy="66" rx="2.7" ry="3.5" fill="#1b1110" />
+          <circle cx="-8.6" cy="64.6" r=".9" fill="#fff" /><circle cx="10.4" cy="64.6" r=".9" fill="#fff" />
+          <path d="M-15 59.5 Q-9.5 56 -4 58.5 M4 58.5 Q9.5 56 15 59.5" stroke="#1b1110" stroke-width="1.9" fill="none" stroke-linecap="round" />
+          <circle class="cheek" cx="-16" cy="75" r="4.2" fill="#e0707a" /><circle class="cheek" cx="16" cy="75" r="4.2" fill="#e0707a" />
+          <ellipse cx="0" cy="56.5" rx="1.8" ry="2.6" fill="#c4302b" />
+        </g>
+      </g>
+    </svg>
+    <svg class="ch bride" viewBox="-62 30 124 190" aria-hidden="true">
+      <ellipse cx="0" cy="210" rx="34" ry="5" fill="rgba(0,0,0,.3)" />
+      <g class="all">
+        <path d="M-29 62 Q-38 112 -27 138 Q0 144 27 138 Q38 112 29 62Z" fill="#1f1411" />
+        <path class="skirt" d="M-22 148 L22 148 L32 206 L-32 206Z" fill="#a3162a" />
+        <path d="M-9 150 L-13 205 M0 150 L0 205 M9 150 L13 205" stroke="#7d0f20" stroke-width="1.2" />
+        <path d="M-30.6 198 L30.6 198 L32 206 L-32 206Z" fill="#d8a94b" /><path d="M-30 202 H30" stroke="#8c1f2b" stroke-width="1.4" stroke-dasharray="3 3" />
+        <g class="legL"><ellipse cx="-10" cy="208" rx="8" ry="3.6" fill="#c88a62" /></g>
+        <g class="legR"><ellipse cx="10" cy="208" rx="8" ry="3.6" fill="#c88a62" /></g>
+        <path d="M-19 100 Q-21 126 -23 152 L23 152 Q21 126 19 100 Q0 94 -19 100Z" fill="#a3162a" />
+        <path d="M-19 100 L-6 98 L24 150 L8 154Z" fill="#e8a92f" /><path d="M-6 98 L24 150" stroke="#a3162a" stroke-width="2" />
+        <path d="M8 154 L24 150 L31 190 L15 195Z" fill="#e8a92f" /><path d="M15 195 L31 190" stroke="#a3162a" stroke-width="2" />
+        <path d="M-8 100 Q0 111 8 100" stroke="#e8c558" stroke-width="1.7" fill="none" /><circle cx="0" cy="110.5" r="2" fill="#e8c558" />
+        <g class="armL"><path d="M-22 103 Q-29 126 -25 145 L-17 145 Q-16 124 -16 106Z" fill="#c88a62" /><rect x="-26" y="135" width="9.6" height="2.4" rx="1" fill="#e8c558" /><rect x="-26" y="139" width="9.6" height="2.4" rx="1" fill="#e8c558" /><circle cx="-21" cy="148.5" r="5.3" fill="#c88a62" /></g>
+        <g class="armR"><path d="M22 103 Q29 126 25 145 L17 145 Q16 124 16 106Z" fill="#c88a62" /><rect x="16.4" y="135" width="9.6" height="2.4" rx="1" fill="#e8c558" /><rect x="16.4" y="139" width="9.6" height="2.4" rx="1" fill="#e8c558" /><circle cx="21" cy="148.5" r="5.3" fill="#c88a62" /></g>
+        <g class="head">
+          <rect x="-4.8" y="90" width="9.6" height="13" fill="#c88a62" />
+          <circle cx="0" cy="68" r="24.5" fill="#c88a62" />
+          <path d="M-29 74 L-23 74 L-26 85Z M23 74 L29 74 L26 85Z" fill="#e8c558" /><circle cx="-26" cy="74" r="1.6" fill="#fff4dc" /><circle cx="26" cy="74" r="1.6" fill="#fff4dc" />
+          <path d="M-25.5 67 Q-27 40 0 39.5 Q27 40 25.5 67 Q17 50 4 49 Q0 48.6 -4 49 Q-17 50 -25.5 67Z" fill="#1f1411" />
+          <path d="M0 40 L0 49" stroke="#3d2c24" stroke-width="1.2" />
+          <g><circle cx="-15" cy="45" r="3.4" fill="#fff4dc" /><circle cx="-21" cy="51" r="3" fill="#fff4dc" /><circle cx="-9" cy="42.5" r="2.6" fill="#f4c95d" /><circle cx="15" cy="45" r="3.4" fill="#fff4dc" /><circle cx="21" cy="51" r="3" fill="#fff4dc" /><circle cx="9" cy="42.5" r="2.6" fill="#f4c95d" /></g>
+          <circle cx="0" cy="56" r="2.4" fill="#b3122a" />
+          <ellipse class="eye" cx="-9" cy="67" rx="2.9" ry="3.7" fill="#2a1713" /><ellipse class="eye" cx="9" cy="67" rx="2.9" ry="3.7" fill="#2a1713" />
+          <circle cx="-8.1" cy="65.5" r="1" fill="#fff" /><circle cx="9.9" cy="65.5" r="1" fill="#fff" />
+          <path d="M-13 63.4 Q-9 60.8 -5.2 63.2 M5.2 63.2 Q9 60.8 13 63.4" stroke="#2a1713" stroke-width="1.5" fill="none" stroke-linecap="round" />
+          <path d="M-13.5 58.8 Q-8.5 55.5 -4 57.8 M4 57.8 Q8.5 55.5 13.5 58.8" stroke="#1f1411" stroke-width="1.6" fill="none" stroke-linecap="round" />
+          <path d="M-1.4 73 Q0 74.6 1.4 73" stroke="#a86a46" stroke-width="1.2" fill="none" stroke-linecap="round" />
+          <path d="M-9.5 77 Q0 90 9.5 77Z" fill="#7a2e2e" /><path d="M-7.4 77.6 Q0 83 7.4 77.6Z" fill="#fff" />
+          <circle class="cheek" cx="-16" cy="76" r="4.3" fill="#e0707a" /><circle class="cheek" cx="16" cy="76" r="4.3" fill="#e0707a" />
+        </g>
+      </g>
+    </svg>
+      <div class="hearts" id="hearts"></div>
+    </div>
+  </div>
+
   <script>
     (function () {
       var root = document.documentElement, body = document.body;
@@ -2227,6 +2416,7 @@
           burst(28, innerWidth * .32, innerHeight * .45);
           burst(28, innerWidth * .68, innerHeight * .45);
           startAmbient();
+          duoHello();
         }, reduce ? 100 : 1500);
         setTimeout(function () {
           gate.style.display = "none";
@@ -2235,6 +2425,56 @@
       }
       ob.addEventListener("click", function (e) { e.stopPropagation(); openGate(); });
       gate.addEventListener("click", openGate);
+
+      /* little bride & groom: walk along the bottom while the page scrolls, act while it is still */
+      var duo = $("duo"), hearts = $("hearts"), lastY = window.pageYOffset || 0, walkT = null, actT = null, ai = 0;
+      var acts = ["touch", "wave", "rose", "namaste", "dance"];
+      function duoPos() {
+        var sy = window.pageYOffset || 0, total = Math.max(1, root.scrollHeight - innerHeight);
+        var prog = Math.min(1, Math.max(0, sy / total)), w = duo.offsetWidth || 110;
+        var maxX = Math.max(0, innerWidth - w - 92);
+        duo.style.setProperty("--x", (16 + prog * maxX).toFixed(1) + "px");
+      }
+      function heart() {
+        if (reduce || !hearts) return;
+        var h = document.createElement("span");
+        h.className = "ht"; h.textContent = "\u2665";
+        h.style.setProperty("--lx", (30 + Math.random() * 40).toFixed(0) + "%");
+        h.style.setProperty("--dx", (Math.random() * 40 - 20).toFixed(0) + "px");
+        h.style.setProperty("--fs", (12 + Math.random() * 9).toFixed(0) + "px");
+        hearts.appendChild(h);
+        setTimeout(function () { if (h.parentNode) h.parentNode.removeChild(h); }, 2400);
+      }
+      function heartsBurst(n) { for (var i = 0; i < n; i++) setTimeout(heart, i * 220); }
+      function doAct(name, ms) {
+        clearTimeout(actT);
+        duo.setAttribute("data-act", name);
+        if (name === "touch" || name === "rose") heartsBurst(5);
+        actT = setTimeout(function () { duo.setAttribute("data-act", ""); }, ms || 3600);
+      }
+      function duoHello() { setTimeout(function () { doAct("wave", 3000); }, 1400); }
+      window.addEventListener("scroll", function () {
+        var y = window.pageYOffset || 0;
+        if (Math.abs(y - lastY) > 1) {
+          if (!reduce) {
+            if (duo.getAttribute("data-act")) { clearTimeout(actT); duo.setAttribute("data-act", ""); }
+            duo.classList.add("walking");
+            clearTimeout(walkT);
+            walkT = setTimeout(function () { duo.classList.remove("walking"); }, 240);
+          }
+        }
+        lastY = y; duoPos();
+      }, { passive: true });
+      window.addEventListener("resize", duoPos);
+      duoPos();
+      if (!reduce) {
+        setInterval(function () {
+          if (!body.classList.contains("entered") || duo.classList.contains("walking")) return;
+          ai = (ai + 1) % acts.length;
+          doAct(acts[ai], 3600);
+        }, 7500);
+        setInterval(function () { if (body.classList.contains("entered") && !duo.classList.contains("walking")) heart(); }, 5200);
+      }
 
       /* countdown */
       var target = new Date("2026-12-03T12:00:00+05:30").getTime();
